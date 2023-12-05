@@ -1,6 +1,6 @@
 
 const { Op } = require('sequelize')
-const {Recipe, Type, Holiday, NationalCuisine, LikedRecipe} = require('../models')
+const {Recipe, Type, Holiday, NationalCuisine, LikedRecipe,RecipeIfo} = require('../models')
 const fs = require('fs')
 const path = require('path');
 
@@ -11,7 +11,7 @@ class RecipeService {
 
         const recipeData = await Recipe.create({
             title:recipe.title,
-            description:recipe.description,
+          
             ingredients:recipe.ingredients,
             steps:recipe.steps,
             authorId:recipe.authorId,
@@ -21,6 +21,11 @@ class RecipeService {
             nationalCuisineId:recipe.nationalCuisineId,
             isHalal:recipe.isHalal,
             isVegan:recipe.isVegan
+        })
+
+        const RecipeOInfo = await RecipeIfo.create({
+            description:recipe.description,
+        
         })
 
         return recipeData

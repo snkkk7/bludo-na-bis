@@ -39,11 +39,8 @@ const LikedRecipe = sequelize.define('LikedRecipe',{
 const Recipe = sequelize.define('recipe',{
     id:{type: DataTypes.INTEGER,allowNull:false, primaryKey: true, autoIncrement: true},
     title:{type:DataTypes.STRING,allowNull:false},
-    description:{type:DataTypes.STRING,allowNull:false},
-    ingredients:{type:DataTypes.ARRAY(DataTypes.JSON),defaultValue:[]},
     isVegan:{type:DataTypes.BOOLEAN,defaultValue:false},
     isHalal:{type:DataTypes.BOOLEAN,defaultValue:false},
-    steps:{type:DataTypes.ARRAY(DataTypes.JSON),defaultValue:[]},
     authorId:{type:DataTypes.INTEGER,allowNull:false,references:{
         model:'users',
         key:"id"
@@ -55,10 +52,20 @@ const Recipe = sequelize.define('recipe',{
     img:{type:DataTypes.STRING,allowNull:false,unique:true}
 })
 
+const RecipeInfo = sequelize.define("recipeInfo",{
+    id:{type: DataTypes.INTEGER,allowNull:false, primaryKey: true, autoIncrement: true},
+    steps:{type:DataTypes.ARRAY(DataTypes.JSON),defaultValue:[]},
+    ingredients:{type:DataTypes.ARRAY(DataTypes.JSON),defaultValue:[]},
+    description:{type:DataTypes.STRING,allowNull:false},
+})
+
 const MessageOfRecipe = sequelize.define("messageOfRecipe",{
     id:{type: DataTypes.INTEGER,allowNull:false, primaryKey: true, autoIncrement: true},
     message:{type:DataTypes.STRING,allowNull:false},
 })
+
+Recipe.hasOne(RecipeInfo)
+RecipeInfo.belongsTo(Recipe)
 
 User.hasMany(MessageOfRecipe)
 MessageOfRecipe.belongsTo(User)
@@ -93,5 +100,6 @@ module.exports = {
     Holiday,
     NationalCuisine,
     LikedRecipe,
-    MessageOfRecipe
+    MessageOfRecipe,
+    RecipeInfo
 }
