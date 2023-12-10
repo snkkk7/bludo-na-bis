@@ -39,8 +39,8 @@ const LikedRecipe = sequelize.define('LikedRecipe',{
 const Recipe = sequelize.define('recipe',{
     id:{type: DataTypes.INTEGER,allowNull:false, primaryKey: true, autoIncrement: true},
     title:{type:DataTypes.STRING,allowNull:false},
-    isVegan:{type:DataTypes.BOOLEAN,defaultValue:false},
-    isHalal:{type:DataTypes.BOOLEAN,defaultValue:false},
+    isVegan:{type:DataTypes.BOOLEAN,defaultValue:false,allowNull:true},
+    isHalal:{type:DataTypes.BOOLEAN,defaultValue:false,allowNull:true},
     authorId:{type:DataTypes.INTEGER,allowNull:false,references:{
         model:'users',
         key:"id"
@@ -72,7 +72,6 @@ MessageOfRecipe.belongsTo(User)
 
 Recipe.hasMany(MessageOfRecipe)
 MessageOfRecipe.belongsTo(Recipe)
-
 
 Type.hasMany(Recipe)
 Recipe.belongsTo(Type)

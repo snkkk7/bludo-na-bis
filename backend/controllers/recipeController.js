@@ -11,11 +11,6 @@ class RecipeController {
         try{
             const {title,description,ingredients,steps,typeId,holidayId,nationalCuisineId,isHalal,isVegan} = req.body
 
-            console.log({
-                isHalal,
-                isVegan
-            })
-
             const {refreshToken} = req.cookies
 
             const {img} = req.files

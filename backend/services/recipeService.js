@@ -1,6 +1,6 @@
 
 const { Op } = require('sequelize')
-const {Recipe, Type, Holiday, NationalCuisine, LikedRecipe,RecipeIfo} = require('../models')
+const {Recipe, Type, Holiday, NationalCuisine, LikedRecipe,RecipeInfo} = require('../models')
 const fs = require('fs')
 const path = require('path');
 
@@ -11,9 +11,6 @@ class RecipeService {
 
         const recipeData = await Recipe.create({
             title:recipe.title,
-          
-            ingredients:recipe.ingredients,
-            steps:recipe.steps,
             authorId:recipe.authorId,
             img:recipe.img,
             typeId:recipe.typeId,
@@ -23,9 +20,11 @@ class RecipeService {
             isVegan:recipe.isVegan
         })
 
-        const RecipeOInfo = await RecipeIfo.create({
+        const recipeResult = await RecipeInfo.create({
             description:recipe.description,
-        
+            ingredients:recipe.ingredients,
+            steps:recipe.steps,
+            recipeId:recipeData.id
         })
 
         return recipeData
@@ -74,7 +73,28 @@ class RecipeService {
 
         const recipe = await Recipe.findOne({where:{id}})
 
-        return recipe
+        const recipeInfo = await RecipeInfo.findOne({where:{recipeId:recipe.id}})
+
+        const typeInfo = await Type.findOne({where:{id:recipe.typeId}})
+
+        const nationalCuisineInfo = await NationalCuisine.findOne({where:{id:recipe.nationalCuisineId}})
+
+        const holidayInfo = await Holiday.findOne({where:{id:recipe.holidayId}})
+
+        return {
+            title:recipe.title,
+            isVegan:recipe.isVegan,
+            isHalal:recipe.isHalal,
+            authorId:recipe.authorId,
+            img:recipe.img,
+            id:recipe.id,
+            typeName:typeInfo.typeName,
+            nationalCuisineName:nationalCuisineInfo.nationalCuisineName,
+            holidayName:holidayInfo.holidayName,
+            steps:recipeInfo.steps,
+            ingredients:recipeInfo.ingredients,
+            description:recipeInfo.description,
+        }
 
     }
     async getRecipes({productName,typeId,holidayId,nationalCuisineId,isVegan,isHalal,page}){
