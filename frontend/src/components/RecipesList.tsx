@@ -9,24 +9,41 @@ import React , { ChangeEvent } from "react"
 
 import { useGetRecipesQuery } from "@/store/recipesApi";
 
+import FilterRecipeModal from './FilterRecipeModal';
+
 const RecipesList : React.FC = () => {
 
     const [page,setPage] = React.useState<number>(1);
 
     const [value,setValue] = React.useState<string>("")
 
+    const [open, setOpen] = React.useState(false);
+
+    const [types,setTypes] = React.useState<string[]>()
+
+    const [nationalCuisine,setNationalCuisine] = React.useState<string[]>()
+
+    const [holidays,setHolidays] = React.useState<string[]>()
+
     const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
 
     const handleChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value)
+        setValue(event.target.value)    
     }
+
+
 
     const {data,isSuccess,isLoading} = useGetRecipesQuery({
         page:page,
-        productName:value
+        productName:value,
+        
     })
+
+
+
+
 
     return (
          <>
@@ -38,10 +55,10 @@ const RecipesList : React.FC = () => {
                                      "       
                            onChange={handleChangeValue} 
                      />
-                <button className='ml-3'>Фильтр</button>
-            </div>
+                <button className='ml-3' onClick={() => setOpen(true)}>Фильтр</button>
+                </div>
 
-            <ul className="mb-5">
+            <ul className="mb-5 flex flex-wrap">
                 {   
                         isSuccess
                             && 
@@ -61,7 +78,7 @@ const RecipesList : React.FC = () => {
              
             } 
 
-           
+           <FilterRecipeModal isOpen={open} handleCloseFilterModal={() => setOpen(false)}/>
          </>    
     )
 }

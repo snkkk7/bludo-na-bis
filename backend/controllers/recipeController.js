@@ -140,9 +140,11 @@ class RecipeController {
     async getTypes(req,res,next){
         try{
 
-            const {page} = req.query
+            const {page,typeName} = req.query
 
-            const types = await recipeService.getTypes(page)
+            console.log(typeName)
+
+            const types = await recipeService.getTypes(page,typeName)
 
             res.json(types)
 
@@ -154,9 +156,11 @@ class RecipeController {
     async getHolidays(req,res,next){
         try{
         
-            const {page} = req.query
+            const {page,holidayName} = req.query
 
-            const holidays = await recipeService.getHolidays(page)
+            console.log(page + " страница")
+
+            const holidays = await recipeService.getHolidays(page,holidayName)
 
             res.json(holidays)
 
@@ -168,9 +172,9 @@ class RecipeController {
     async getNationalCuisines(req,res,next){
         try{
         
-            const {page} = req.query
+            const {page,nationalCuisineName} = req.query
 
-            const nationalCuisine = await recipeService.getNationalCuisines(page)
+            const nationalCuisine = await recipeService.getNationalCuisines(page,nationalCuisineName)
 
             res.json(nationalCuisine)
 

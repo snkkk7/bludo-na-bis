@@ -15,17 +15,17 @@ const User = sequelize.define('user', {
 })
 
 const Type = sequelize.define("type",{
-    typeName:{type:DataTypes.STRING,allowNull:false,unique:true},
+    name:{type:DataTypes.STRING,allowNull:false,unique:true},
     id:{type:DataTypes.INTEGER,autoIncrement:true,primaryKey:true}
 })
 
 const NationalCuisine = sequelize.define("nationalCuisine",{
-    nationalCuisineName:{type:DataTypes.STRING,allowNull:false,unique:true},
+    name:{type:DataTypes.STRING,allowNull:false,unique:true},
     id:{type:DataTypes.INTEGER,autoIncrement:true,primaryKey:true}
 })
 
 const Holiday = sequelize.define("holiday",{
-    holidayName:{type:DataTypes.STRING,allowNull:false,unique:true},
+    name:{type:DataTypes.STRING,allowNull:false,unique:true},
     id:{type:DataTypes.INTEGER,autoIncrement:true,primaryKey:true}
 })
 

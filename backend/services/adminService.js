@@ -6,21 +6,21 @@ const perPage = 10;
 class AdminService {
     async addType(typeName){
 
-        const type = await Type.create({typeName})
+        const type = await Type.create({name:typeName})
 
         return type
 
     }
     async addHoliday(holidayName){
 
-        const holiday = await Holiday.create({holidayName})
+        const holiday = await Holiday.create({name:holidayName})
 
         return holiday
 
     }
     async addNationalCuisine(nationalCuisineName){
 
-        const nationalCuisine = await NationalCuisine.create({nationalCuisineName})
+        const nationalCuisine = await NationalCuisine.create({name:nationalCuisineName})
 
         return nationalCuisine
 
@@ -28,7 +28,7 @@ class AdminService {
 
     async editType(typeName,id){
 
-        const type = await Type.update({typeName},{where:{id}})
+        const type = await Type.update({name:typeName},{where:{id}})
 
         return type
 
@@ -36,7 +36,7 @@ class AdminService {
 
     async editNationalCuisine(nationalCuisineName,id){
 
-        const nationalCuisine = await NationalCuisine.update({nationalCuisineName},{where:{id}})
+        const nationalCuisine = await NationalCuisine.update({name:nationalCuisineName},{where:{id}})
 
         return nationalCuisine
 
@@ -44,7 +44,7 @@ class AdminService {
 
     async editHoliday(holidayName,id){
 
-        const holiday = await Holiday.update({holidayName},{where:{id}})
+        const holiday = await Holiday.update({name:holidayName},{where:{id}})
 
         return holiday
 

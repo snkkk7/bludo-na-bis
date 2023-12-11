@@ -1,10 +1,10 @@
 
-const { Op } = require('sequelize')
+const { Op, where } = require('sequelize')
 const {Recipe, Type, Holiday, NationalCuisine, LikedRecipe,RecipeInfo} = require('../models')
 const fs = require('fs')
 const path = require('path');
 
-const perPage = 10;
+const perPage = 5;
 
 class RecipeService {
     async postRecipe(recipe){
@@ -88,9 +88,9 @@ class RecipeService {
             authorId:recipe.authorId,
             img:recipe.img,
             id:recipe.id,
-            typeName:typeInfo.typeName,
-            nationalCuisineName:nationalCuisineInfo.nationalCuisineName,
-            holidayName:holidayInfo.holidayName,
+            typeName:typeInfo.name,
+            nationalCuisineName:nationalCuisineInfo.name,
+            holidayName:holidayInfo.name,
             steps:recipeInfo.steps,
             ingredients:recipeInfo.ingredients,
             description:recipeInfo.description,
@@ -139,42 +139,82 @@ class RecipeService {
 
     }
 
-    async getTypes(page){
+    async getTypes(page,typeName){
 
         const offset = (page - 1) * perPage 
+
+        const whereOptions = {}
+
+        if(typeName){
+            whereOptions.name = {
+                [Op.iLike]:`%${typeName}%`
+            }
+        }
 
         const types = await Type.findAndCountAll({
+            where:whereOptions,
             offset,
             limit:perPage
         })
 
-        return types
+        return {
+            pages:Math.ceil(types.count / 5),
+            rows:types.rows
+        }
 
     }
 
-    async getNationalCuisines(page){
+    async getNationalCuisines(page,nationalCuisineName){
 
         const offset = (page - 1) * perPage 
 
+        const whereOptions = {}
+
+        if(nationalCuisineName){
+            whereOptions.name = {
+                [Op.iLike]:`%${nationalCuisineName}%`
+            }
+        }
+
         const nationalCuisines = await NationalCuisine.findAndCountAll({
+            where:whereOptions,
             offset,
             limit:perPage
         })
 
-        return nationalCuisines
+        return {
+            pages:Math.ceil(nationalCuisines.count / 5),
+            rows:nationalCuisines.rows
+        }
 
     }
 
-    async getHolidays(page){
+    async getHolidays(page,holidayName){
 
         const offset = (page - 1)  *  perPage 
 
+        console.log("hEllloo")
+
+        const whereOptions = {}
+
+        if(holidayName){
+            whereOptions.name = {
+                [Op.iLike]:`%${holidayName}%`
+            }
+        }
+
         const holidays = await Holiday.findAndCountAll({
+            where:whereOptions,
             offset,
             limit:perPage
         })
 
-        return holidays
+        console.log(holidays.rows)
+
+        return {
+            pages:Math.ceil(holidays.count / 5),
+            rows:holidays.rows
+        }
 
     }
 

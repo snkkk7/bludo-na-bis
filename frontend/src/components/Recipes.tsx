@@ -10,8 +10,9 @@ const Recipes = () => {
                     <h1 className="text-center my-10 text-3xl">
                         Рецепты
                     </h1>
-                    <div className="flex flex-col w-full items-center">
-                
+                    <div className="flex flex flex-col items-center">
+                    
+        
 
                         <RecipesList/>
 

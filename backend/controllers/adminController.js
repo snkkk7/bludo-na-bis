@@ -7,6 +7,8 @@ class AdminController {
         try{
             const {typeName} = req.body
 
+            console.log(typeName)
+
             const type = await AdminService.addType(typeName)
 
             res.json(type)
