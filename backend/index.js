@@ -22,17 +22,17 @@ const PORT = process.env.PORT || 5000
 
 const router = require('./routes/index.js')
 
-app.use(cors())
+app.use(express.json())
 
 app.use(cookieParser())
 
-app.use(express.json())
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(express.static(path.resolve(__dirname, 'static')))
 
-app.use(fileUpload({}))
-
 // Обработка ошибок, последний Middleware
+
+app.use(fileUpload({}))
 
 app.use('/api',router)
 

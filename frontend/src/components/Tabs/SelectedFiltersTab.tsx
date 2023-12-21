@@ -15,6 +15,9 @@ const SelectedFiltersTab = () => {
                     <p className='mr-5'>Выбранные типы: </p> 
                     <ul>
                         {
+                            types.map((el:any) => 1)
+                        }
+                        {
                             types.length === 0 && <li>Вы еще не выбрали ни одного типа</li>
                         }
                         {

@@ -4,7 +4,7 @@ const userService = require('../services/userService')
 
 const uuid = require('uuid')
 const path = require('path');
-const { Holiday } = require('../models');
+const { Holiday, Recipe } = require('../models');
 
 class RecipeController {
     async postRecipe(req,res,next){
@@ -53,19 +53,29 @@ class RecipeController {
                 page,
             } = req.query
 
+            if(page){
 
-            const recipes = await recipeService.getRecipes({
-                                                              productName,
-                                                              typeId,
-                                                              holidayId,
-                                                              nationalCuisineId,
-                                                              isVegan:Boolean(isVegan),
-                                                              isHalal:Boolean(isHalal),
-                                                              page
-                                                           })
+                    const recipes = await recipeService.getRecipes({
+                                                                      productName,
+                                                                      typeId,
+                                                                      holidayId,
+                                                                      nationalCuisineId,
+                                                                      isVegan:isVegan,
+                                                                      isHalal:isHalal,
+                                                                      page
+                                                                   })
+                                                               
+                    res.json(recipes)
 
-            res.json(recipes)
+            }else{
 
+                const recipes = await Recipe.findAll()
+
+                res.json(recipes)
+
+            }           
+            
+            
                                                            
         }catch(e){
             next(e)
@@ -137,50 +147,25 @@ class RecipeController {
             next(e)
         }
     }
-    async getTypes(req,res,next){
-        try{
 
-            const {page,typeName} = req.query
+    async getCharacteristics(req,res,next){
 
-            console.log(typeName)
+        try{     
 
-            const types = await recipeService.getTypes(page,typeName)
+            const { page,characteristicName,typeOfCharacteristic } = req.query
 
-            res.json(types)
+            console.log(typeOfCharacteristic)
 
-        }catch(e){
-            next(e)
-        }
-    }
+            const characteristics = await recipeService.getCharacteristicks( page,characteristicName,typeOfCharacteristic)
 
-    async getHolidays(req,res,next){
-        try{
-        
-            const {page,holidayName} = req.query
+            console.log(characteristics)
 
-            console.log(page + " страница")
-
-            const holidays = await recipeService.getHolidays(page,holidayName)
-
-            res.json(holidays)
+            res.json(characteristics)
 
         }catch(e){
             next(e)
         }
-    }
 
-    async getNationalCuisines(req,res,next){
-        try{
-        
-            const {page,nationalCuisineName} = req.query
-
-            const nationalCuisine = await recipeService.getNationalCuisines(page,nationalCuisineName)
-
-            res.json(nationalCuisine)
-
-        }catch(e){
-            next(e)
-        }
     }
 
     async likeRecipe(req,res,next){

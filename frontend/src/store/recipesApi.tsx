@@ -17,7 +17,13 @@ export const recipesApi = createApi({
             endpoints: (builder) => ({
                 getRecipes : builder.query({
                     query:(body) => ({
-                        url:`?page=${body.page}${body.productName && `&productName=${body.productName}`}${body.types || "&"}${body.holidays || "&"}${body.nationalCuisines || "&"}`,
+                        url:`?page=${body.page}&${body.queryParams}&isHalal=${body.isHalal}&isVegan=${body.isVegan}`,
+                        method:"GET"
+                    })
+                }),
+                getRecipe : builder.query({
+                    query:(body) => ({
+                        url:`/${body}`,
                         method:"GET"
                     })
                 }),
@@ -25,4 +31,4 @@ export const recipesApi = createApi({
             })
 })
 
-export const { useGetRecipesQuery } = recipesApi
+export const { useGetRecipesQuery,useGetRecipeQuery } = recipesApi

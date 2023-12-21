@@ -1,5 +1,4 @@
 
-'use client'
 
 import Container from "./Container"
 
@@ -12,14 +11,13 @@ const TheHeader = () => {
     const {isAuth} = useAppSelector(state => state.authorization)
 
     return (
-        <header className="bg-slate-700 py-6">
+        <header className="bg-slate-700 py-6 mb-5">
             <Container>
                 <nav className="flex justify-between items-center">
                     <Link href="/" className="text-white">Блюдо на бис</Link>
 
                     <ul className="flex gap-5">
-
-                          {
+                           {
                              !isAuth && ( 
                                          <>
                                            <li>

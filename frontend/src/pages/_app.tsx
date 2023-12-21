@@ -6,9 +6,9 @@ import { Provider } from 'react-redux'
 
 import { store } from '@/store'
 
-import Layout from '../components/Layout'
+import Layout from '../components/UI/Layout'
 
-import TheHeader from '@/components/TheHeader'
+import TheHeader from '@/components/UI/TheHeader'
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (   

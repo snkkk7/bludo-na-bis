@@ -9,7 +9,7 @@ import type {
 
 
 
-  const baseQuery = fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/user' })
+  const baseQuery = fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/user', credentials:'include' })
 
   const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
@@ -36,6 +36,7 @@ import type {
 export const authorizationApi = createApi({
     reducerPath: 'authorizationApi',
     baseQuery:baseQueryWithReauth,
+  
     endpoints:(builder) => ({
         singup:builder.mutation({
             query:(body) => ({

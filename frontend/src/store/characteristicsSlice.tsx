@@ -7,22 +7,44 @@ const initialState:IinitialStateCharacteristics = {
     holidays:[],
     types:[],
     isHalal:false,
-    isVegan:false
+    isVegan:false,
 }
 
 export const characteristicsSlice = createSlice({
     name:"characteristicsSlice",
     initialState,
-    reducers:{
-        addType:(state,actions:PayloadAction<ICharacteristic>) => {
-            state.types = [...state.types,actions.payload]
+    reducers:{  
+        removeType(state,{payload:{id,name}}){    
+             state.types = state.types.filter((el) => el.id !== id)      
         },
-        addHoliday:(state,actions:PayloadAction<ICharacteristic>) => {
-            state.holidays = [...state.holidays,actions.payload]
+        removeHoliday(state,{payload:{id,name}}){
+            state.types = state.holidays.filter((el) => el.id !== id)
         },
-        addNationalCuisine:(state,actions:PayloadAction<ICharacteristic>) => {
-            state.nationalCuisines = [...state.nationalCuisines,actions.payload]
+        removeNationalCuisine(state,{payload:{id,name}}){
+            state.types = state.nationalCuisines.filter((el) => el.id !== id)
+        },
+        addHoliday:(state,{payload:{name,id}}:PayloadAction<ICharacteristic>) => {
+            if(!state.holidays.some(obj => JSON.stringify({name,id}) === JSON.stringify(obj))){
+            state.holidays = [...state.holidays,{name,id}]
+            }
+        },
+        addType:(state,{payload:{name,id}}:PayloadAction<ICharacteristic>) => {
+            if(!state.types.some(obj => JSON.stringify({name,id}) === JSON.stringify(obj))){
+                state.types = [...state.types,{name,id}]
+            }
+        },
+        addNationalCuisine:(state,{payload:{name,id}}:PayloadAction<ICharacteristic>) => {
+            if(!state.nationalCuisines.some(obj => JSON.stringify({name,id}) === JSON.stringify(obj))){
+            state.nationalCuisines = [...state.nationalCuisines,{name,id}]
         }
+        },
+        toggleHalalStatus(state){
+            state.isHalal = !(state.isHalal)
+        },
+        toggleVeganStatus(state){
+            state.isVegan = !(state.isVegan)
+        },
+ 
     }
 })
 

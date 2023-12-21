@@ -48,7 +48,7 @@ class RecipeService {
         }
 
         if(recipe.img){
-            recipe.img
+            options.img
         }
         
         const recipeRes = await Recipe.update(options,{where:{id}})
@@ -73,13 +73,17 @@ class RecipeService {
 
         const recipe = await Recipe.findOne({where:{id}})
 
+
         const recipeInfo = await RecipeInfo.findOne({where:{recipeId:recipe.id}})
 
         const typeInfo = await Type.findOne({where:{id:recipe.typeId}})
 
         const nationalCuisineInfo = await NationalCuisine.findOne({where:{id:recipe.nationalCuisineId}})
-
+        
         const holidayInfo = await Holiday.findOne({where:{id:recipe.holidayId}})
+        
+
+
 
         return {
             title:recipe.title,
@@ -129,92 +133,93 @@ class RecipeService {
             whereOptions.isHalal = isHalal;
           }
 
-        const recipes = await Recipe.findAndCountAll({
+        const dataOfrecipes = await Recipe.findAndCountAll({
             limit:perPage,
             offset,
             where:whereOptions
         })
 
-        return recipes
-
-    }
-
-    async getTypes(page,typeName){
-
-        const offset = (page - 1) * perPage 
-
-        const whereOptions = {}
-
-        if(typeName){
-            whereOptions.name = {
-                [Op.iLike]:`%${typeName}%`
-            }
-        }
-
-        const types = await Type.findAndCountAll({
-            where:whereOptions,
-            offset,
-            limit:perPage
-        })
-
         return {
-            pages:Math.ceil(types.count / 5),
-            rows:types.rows
+            count: Math.ceil(dataOfrecipes.count / 5),
+            rows: dataOfrecipes.rows
         }
 
     }
+    async getCharacteristicks(page,characteristicName,typeOfcharacteristic){
 
-    async getNationalCuisines(page,nationalCuisineName){
+            if(typeOfcharacteristic == 'type'){
 
-        const offset = (page - 1) * perPage 
+                const offset = (page - 1) * perPage 
 
-        const whereOptions = {}
-
-        if(nationalCuisineName){
-            whereOptions.name = {
-                [Op.iLike]:`%${nationalCuisineName}%`
+                const whereOptions = {}
+        
+                if(characteristicName){
+                    whereOptions.name = {
+                        [Op.iLike]:`%${characteristicName}%`
+                    }
+                }
+        
+                const types = await Type.findAndCountAll({
+                    where:whereOptions,
+                    offset,
+                    limit:perPage
+                })
+        
+                return {
+                    pages:Math.ceil(types.count / 5),
+                    rows:types.rows
+                }
             }
-        }
+            if(typeOfcharacteristic == 'nationalCuisine'){
+             
+                const offset = (page - 1) * perPage 
 
-        const nationalCuisines = await NationalCuisine.findAndCountAll({
-            where:whereOptions,
-            offset,
-            limit:perPage
-        })
+                const whereOptions = {}
 
-        return {
-            pages:Math.ceil(nationalCuisines.count / 5),
-            rows:nationalCuisines.rows
-        }
+                if(characteristicName){
+                    whereOptions.name = {
+                        [Op.iLike]:`%${characteristicName}%`
+                    }
+                }
+            
+                const nationalCuisines = await NationalCuisine.findAndCountAll({
+                    where:whereOptions,
+                    offset,
+                    limit:perPage
+                })
+            
+                return {
+                    pages:Math.ceil(nationalCuisines.count / 5),
+                    rows:nationalCuisines.rows
+                }
 
-    }
-
-    async getHolidays(page,holidayName){
-
-        const offset = (page - 1)  *  perPage 
-
-        console.log("hEllloo")
-
-        const whereOptions = {}
-
-        if(holidayName){
-            whereOptions.name = {
-                [Op.iLike]:`%${holidayName}%`
             }
-        }
 
-        const holidays = await Holiday.findAndCountAll({
-            where:whereOptions,
-            offset,
-            limit:perPage
-        })
+            if(typeOfcharacteristic === "holiday"){
 
-        console.log(holidays.rows)
+                const offset = (page - 1) * perPage 
 
-        return {
-            pages:Math.ceil(holidays.count / 5),
-            rows:holidays.rows
-        }
+                const whereOptions = {}
+
+                if(characteristicName){
+                    whereOptions.name = {
+                        [Op.iLike]:`%${characteristicName}%`
+                    }
+                }
+            
+                const holidays = await Holiday.findAndCountAll({
+                    where:whereOptions,
+                    offset,
+                    limit:perPage
+                })
+            
+                return {
+                    pages:Math.ceil(holidays.count / 5),
+                    rows:holidays.rows
+                }
+
+
+            }
 
     }
 

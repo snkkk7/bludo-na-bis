@@ -10,6 +10,7 @@ import characteristicsReducer from './characteristicsSlice'
 
 import authorizationReducer from './authorizationSlice'
 
+import recipeReducer from './recipeSlice'
 
 
 export const store = configureStore({
@@ -18,7 +19,8 @@ export const store = configureStore({
         [ recipesApi.reducerPath ] : recipesApi.reducer,
         [ characteristcsApi.reducerPath ] : characteristcsApi.reducer,
         authorization : authorizationReducer,
-        characteristcs : characteristicsReducer
+        characteristcs : characteristicsReducer,
+        recipe:recipeReducer
     },
     middleware : (getDefaultMiddleware) => getDefaultMiddleware().concat(authorizationApi.middleware,recipesApi.middleware,characteristcsApi.middleware)
 })

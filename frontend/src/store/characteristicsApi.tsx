@@ -13,22 +13,14 @@ import type {
     reducerPath: "characteristcsApi",
     baseQuery:  fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/characteristics' }),
     endpoints: (builder) => ({
-        getTypes: builder.query({
+        getCharacteristics: builder.query({
             query:(body) => ({
-                url:`/types?page=${body.page}${body.typeName && `&typeName=${body.typeName}`}`
-            })
-        }),
-        getHolidays: builder.query({
-            query:(body) => ({
-                url:`/holidays?page=${body.page}${body.holidayName && `&holidayName=${body.holidayName}`}`
-            })
-        }),
-        getNationalCuisine: builder.query({
-            query: (body) => ({
-                url:`/nationalCuisines?page=${body.page}${body.nationalCuisineName && `&nationalCuisineName=${body.nationalCuisineName}`}`
+                url:`?page=${body.page}${body.characteristicName && `&characteristicName=${body.characteristicName}`}${body.typeOfCharacteristic && `&typeOfCharacteristic=${body.typeOfCharacteristic}`}&${body.queryParams}`,                                              
+                
             })
         })
+    
     })
 })
 
-export const { useGetTypesQuery,useGetHolidaysQuery,useGetNationalCuisineQuery } = characteristcsApi
+export const { useGetCharacteristicsQuery} = characteristcsApi
