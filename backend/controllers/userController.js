@@ -90,7 +90,22 @@ class UserController {
         }else{
             res.json({message:"Пользователь авторизован",isAuth:true})
         }
+    }
 
+    async getMineInfo(req,res,next){
+            try{
+
+                const {refreshToken} = req.cookies
+
+                const {userId} = await userService.getUserIdByRefreshToken(refreshToken)
+
+                const userInfo = await userService.getUserInfo(userId)
+
+                res.json(userInfo)
+
+            }catch(e){
+                next(e)
+            }
     }
 }
 

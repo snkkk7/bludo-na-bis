@@ -4,15 +4,15 @@ import type {IinitialStateRecipe} from '@/interfaces'
 const initialState:IinitialStateRecipe = {
     steps:[],
     ingredients:[],
-    types:{
+    type:{
         name:"",
         id:'',
     },
-    holidays:{
+    holiday:{
         name:"",
         id:'',
     },
-    nationalCuisines:{
+    nationalCuisine:{
         name:"",
         id:'',
     }
@@ -59,6 +59,24 @@ export const recipeSlice = createSlice({
                     name,
                     id
                 }
+            }
+        },
+        removeHoliday(state){
+            state.holiday = {
+                name:"",
+                id:""
+            }
+        },
+        removeType(state){
+            state.type = {
+                name:"",
+                id:""
+            }
+        },
+        removeNationalCuisine(state){
+            state.nationalCuisine = {
+                name:"",
+                id:""
             }
         },
         addType(state,{payload:{name,id}}){

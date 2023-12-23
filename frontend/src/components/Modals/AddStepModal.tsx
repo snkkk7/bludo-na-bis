@@ -29,8 +29,7 @@ const AddStepModal:FC<IOptionsModal> = ({isOpen,onHandleCloseModal}) => {
       })
 
     const onSubmit = (data:any,e:any) => {
-        console.log(e)
-        console.log("ДОБАВЛЯЕМ ШАГ")
+ 
         e.preventDefault()
         reset()
         dispatch(recipeActions.addStep(data.nameOfStep))
@@ -40,7 +39,7 @@ const AddStepModal:FC<IOptionsModal> = ({isOpen,onHandleCloseModal}) => {
 
     const handleRemoveStep = (e:any) => {
         dispatch(recipeActions.removeStep(e.currentTarget.id))
-        console.log(e.currentTarget.id)
+     
     }
 
 
@@ -55,14 +54,14 @@ const AddStepModal:FC<IOptionsModal> = ({isOpen,onHandleCloseModal}) => {
             <Typography id="modal-modal-title" className='text-center mb-2' variant="h6" component="h2">
                Добавте шаг!
             </Typography>
-            <form id='add-step' className='my-5' onSubmit={handleSubmit(onSubmit)}>
+            <form id="stepform" className='my-5' onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <input type="text" {...register("nameOfStep")} className='border-2 rounded-lg mb-2 p-2' placeholder='Добавте шаг!' />
                     {
                          <span className='block mb-2'>{errors.nameOfStep?.message}</span>
                     }
                 </div>
-                <button type='submit' className='border-2 rounded-xl text-sm p-2'>Добавить шаг!</button>
+                <button form="stepform" type='submit' className='border-2 rounded-xl text-sm p-2'>Добавить шаг!</button>
             </form>
             <h3 className='text-xl mb-2'>Шаги</h3>
             <ul>

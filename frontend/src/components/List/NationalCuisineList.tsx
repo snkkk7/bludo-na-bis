@@ -11,9 +11,11 @@ import { characteristicsActions } from "@/store/characteristicsSlice"
 
 import {useAppDispatch} from '../../store/hooks'
 
+import {ICharacteristcsList} from "@/interfaces"
 
+import { FC } from "react"
 
-const NationalCuisinesList = () => {
+const NationalCuisinesList:FC<ICharacteristcsList> = ({addCharacteristic}) => {
 
     const [nationalCuisineName,setNationalCuisineName] = useState<string>("") 
 
@@ -41,7 +43,7 @@ const NationalCuisinesList = () => {
                                      page={page}
                                      countPages={data.pages}
                                      onHandleChangePage={(e:any,page:number) => setPage(page)}
-                                     onAddCharacteristic={(e) => dispatch(characteristicsActions.addNationalCuisine({name:e.target.innerHTML || null,id:e.target.id}))}
+                                     onAddCharacteristic={addCharacteristic}
                          />
                      )
             }

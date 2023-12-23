@@ -56,10 +56,15 @@ export const authorizationApi = createApi({
           query:() => ({
             url:"/checkAuth"
           })
+        }),
+        getUserInfo:builder.query({
+          query:(builder) => ({
+            url:"/getMineInfo"
+          })
         })
     })
 
 
   })
 
-  export const {useSingupMutation,useLoginMutation,useChechAuthQuery} = authorizationApi
+  export const {useSingupMutation,useLoginMutation,useChechAuthQuery,useGetUserInfoQuery} = authorizationApi

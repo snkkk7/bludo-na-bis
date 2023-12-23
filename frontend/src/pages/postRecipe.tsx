@@ -9,12 +9,19 @@ import Image from "next/image"
 
 import defualtPhoto from '../../public/defualtphoto.png'
 
-import IngredientAndStepsEditorTabs from '@/components/UI/IngredientAndStepsEditorTabs'
+import IngredientAndStepsEditorTabs from '@/components/Tabs/IngredientAndStepsEditorTabs'
 
 import * as yup from "yup"
 
 import ErrorModal from '@/components/Modals/ErrorModal'
-import { useAppSelector } from "@/store/hooks"
+
+import CharacteristicsRecipeModal from "@/components/Modals/CharacteristicsRecipeModal"
+
+import { useAppSelector,useAppDispatch } from "@/store/hooks"
+
+import {recipeActions} from "@/store/recipeSlice"
+
+import {usePostRecipeMutation} from "@/store/recipesApi"
 
 const PostRecipe = () => {
 
@@ -60,70 +67,96 @@ const PostRecipe = () => {
                                 resolver: yupResolver(schema),
                               })
                           
-                              const [isIngredientErrorVisible,setIsIngredientErrorVisible] = useState(false) 
+    const [isErrorModalVisible,setIsErrorModalVisible] = useState(false)
 
-                              const [isStepErrorVisible,setIsStepErrorVisible] = useState(false) 
+    const [isIngredientErrorVisible,setIsIngredientErrorVisible] = useState(false) 
+
+    const [isStepErrorVisible,setIsStepErrorVisible] = useState(false) 
                               
-                              const [isHolidayErrorVisible,setIsHolidayErrorVisible] = useState(false) 
+    const [isTypeErrorVisible,setIsTypeErrorVisible] = useState(false)
 
-                              const [isNationalCuisineErrorVisible,setIsNationalCuisineErrorVisible] = useState(false) 
+    const [isNationalCuisineErrorVisible,setIsNationalCuisineErrorVisible] = useState(false)                         
 
-                              const [isTypeErrorVisible,setIsTypeErrorVisible] = useState(false) 
+    const [isHolidayErrorVisible,setIsHolidayErrorVisible] = useState(false)                          
 
     const {steps,ingredients,holiday,type,nationalCuisine} = useAppSelector(state => state.recipe)
-    
-    const [isHolidayModalVisible,setIsHolidayModalVisible] = useState<boolean>(false)
+   
+    const [isCharacteristicsModalVisible,setIsCharacteristicsModalVisible] = useState<boolean>(false)
 
-    const [isTypeModalVisible,setIsTypeModalVisible] = useState<boolean>(false)
+    const handleCloseCharacteristicsModal = () => setIsCharacteristicsModalVisible(false)
+    
+    const dispatch = useAppDispatch()
+    
+    const recipeStore = useAppSelector(state => state.recipe)
 
-    const [isNationalCuisineModalVisible,setIsNationalCuisineModalVisible] = useState<boolean>(false)
-    
-    
+    const [postRecipe,{isLoading,isSuccess}] = usePostRecipeMutation()
 
     const onSubmit = (data:any,e:any) => {
       e.preventDefault()
-  
-      if(steps.length == 0){
-        setIsStepErrorVisible(true)
-      }
-      if(ingredients.length == 0) {
-        console.log("dadasdas")
-        setIsIngredientErrorVisible(true)
-      }
-      if(steps.length >= 1 && ingredients.length >= 1){
-        const {nameOfRecipe,description,isHalal,isVegan,photo:[file]} = data
-        const recipe = {
-          nameOfRecipe,
-          description,
-          isHalal,
-          isVegan,
-          steps,
-          ingredients,
-          file
-        }
-        console.log(recipe)
+
+      if(e.target.id === 'post-recipe'){
+
+          if(steps.length == 0){
+            setIsErrorModalVisible(true)
+            setIsStepErrorVisible(true)
+          }
+          if(ingredients.length == 0) {
+            setIsErrorModalVisible(true)
+            setIsIngredientErrorVisible(true)
+          }
+          if(!holiday.name){
+            setIsErrorModalVisible(true)
+            setIsHolidayErrorVisible(true)
+          }
+          if(!type.name){
+            setIsErrorModalVisible(true)
+            setIsTypeErrorVisible(true)
+          }
+          if(!nationalCuisine.name){
+            setIsErrorModalVisible(true)
+            setIsNationalCuisineErrorVisible(true)
+          }
+
+          if(steps.length >= 1 && ingredients.length >= 1 && nationalCuisine.name && type.name && holiday.name){
+            const {nameOfRecipe,description,isHalal,isVegan,photo:[file]} = data
+          
+            const formData = new FormData()
+          
+           
+            formData.append('title',nameOfRecipe)
+            formData.append('description',description)
+            formData.append('isHalal',isHalal)
+            formData.append('isVegan',isVegan)
+            formData.append('steps',JSON.stringify(steps))
+            formData.append('ingredients',JSON.stringify(ingredients))
+            formData.append('img',file)
+            formData.append('typeId',recipeStore.type.id),
+            formData.append('holidayId',recipeStore.holiday.id),
+            formData.append('nationalCuisineId',recipeStore.nationalCuisine.id)
+          
+            postRecipe(formData)
+          
+
+          }
       }
     }
 
     useEffect(() => {
-        if(isIngredientErrorVisible){
+        if(isErrorModalVisible){
             const timeoutId = setTimeout(() => {
-              setIsIngredientErrorVisible(false);
-            }, 1000);
+              setIsErrorModalVisible(false);
+              setIsTypeErrorVisible(false)
+              setIsIngredientErrorVisible(false)
+              setIsHolidayErrorVisible(false)
+              setIsStepErrorVisible(false)
+              setIsNationalCuisineErrorVisible(false)
+            }, 3000);
           
             return () => clearTimeout(timeoutId);
         }
-    },[isIngredientErrorVisible])
+    },[isErrorModalVisible])
 
-    useEffect(() => {
-      if(isStepErrorVisible){
-          const timeoutId = setTimeout(() => {
-            setIsStepErrorVisible(false);
-          }, 1500);
-        
-          return () => clearTimeout(timeoutId);
-      }
-  },[isStepErrorVisible])
+
 
 
     return (
@@ -182,11 +215,9 @@ const PostRecipe = () => {
                 </div>
                 
                  <IngredientAndStepsEditorTabs/>
-                <div className="flex flex-col items-center">
-                  <button type="button" onClick={() => setIsNationalCuisineModalVisible(true)} className="block mb-2 border-2 w-4/5 py-2 rounded-lg">Добавить Тип</button>
-                  <button type="button" onClick={() => setIsHolidayModalVisible(true)} className="block mb-2 border-2 w-4/5 py-2 rounded-lg">Добавить праздник</button>
-                  <button type="button" onClick={() => setIsTypeModalVisible(true)} className="block mb-5 border-2 w-4/5 py-2 rounded-lg">Добавить Национальную кухню</button>
-                </div>
+
+                 <button onClick={() => setIsCharacteristicsModalVisible(true)} type="button" className="mx-auto block mb-7 border-2 p-2 rounded-lg">Добавить характеристики.</button>
+
                 <div className="mb-5 ">
                   <div>
                       <input {...register("isHalal")} type="checkbox" className="mr-2" />
@@ -198,10 +229,27 @@ const PostRecipe = () => {
                   </div>
                 </div>
 
-                 <button type="submit" className="border-2 px-12 py-2 text-lg rounded-lg">submit</button>       
+                 <button id="post-recipe" type="submit" className="border-2 px-12 py-2 text-lg rounded-lg">submit</button>       
             </form>
         </div>
-      <ErrorModal isOpen={isIngredientErrorVisible || isStepErrorVisible} errors={[isIngredientErrorVisible,isStepErrorVisible]}/>
+      <ErrorModal isOpen={isErrorModalVisible} errors={{
+                                                        isTypeErrorVisible:isTypeErrorVisible,
+                                                        isStepErrorVisible:isStepErrorVisible,
+                                                        isNationalCuisineErrorVisible:isNationalCuisineErrorVisible,
+                                                        isHolidayErrorVisible:isHolidayErrorVisible,
+                                                        isIngredientErrorVisible:isIngredientErrorVisible
+                                                      }
+                                                      }
+       />
+
+      <CharacteristicsRecipeModal 
+                                isOpen={isCharacteristicsModalVisible} 
+                                handleCloseModal={handleCloseCharacteristicsModal}
+                                addHoliday={(e:any) => dispatch(recipeActions.addHoliday({name:e.target.innerHTML,id:e.target.id}))}
+                                addType={(e:any) => dispatch(recipeActions.addType({name:e.target.innerHTML,id:e.target.id}))}
+                                addNationalCuisine={(e:any) => dispatch(recipeActions.addNationaCuisine({name:e.target.innerHTML,id:e.target.id}))}
+                                typeModal="postRecipeModal"
+       />
     </> 
     )
 

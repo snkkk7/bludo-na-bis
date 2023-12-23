@@ -14,5 +14,6 @@ userRouter.get("/checkAuth",userController.check)
 
 userRouter.get('/refresh', userController.refresh);
 
+userRouter.get('/getMineInfo',userController.getMineInfo);
 
 module.exports = userRouter

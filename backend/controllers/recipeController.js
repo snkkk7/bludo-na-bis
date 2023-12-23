@@ -4,7 +4,7 @@ const userService = require('../services/userService')
 
 const uuid = require('uuid')
 const path = require('path');
-const { Holiday, Recipe } = require('../models');
+const { Holiday, Recipe, User } = require('../models');
 
 class RecipeController {
     async postRecipe(req,res,next){
@@ -19,19 +19,23 @@ class RecipeController {
 
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-            const tokensUser = await userService.getMe(refreshToken)
+            const userTokens = await userService.getUserIdByRefreshToken(refreshToken)
 
-            const recipe = await recipeService.postRecipe({title,
+            const userData  = await User.findOne({where:{id:userTokens.userId}})
+
+            const recipe = await recipeService.postRecipe({
+                                                          title,
                                                           description,
-                                                          ingredients,
-                                                          authorId:tokensUser.userId,
-                                                          steps,
+                                                          ingredients:JSON.parse(ingredients),
+                                                          authorId:userTokens.userId,
+                                                          authorName:userData.name,
+                                                          steps:JSON.parse(steps),
                                                           img:fileName,
                                                           typeId,
                                                           holidayId,
                                                           nationalCuisineId,
-                                                          isHalal:Boolean(isHalal),
-                                                          isVegan:Boolean(isVegan)
+                                                          isHalal:JSON.parse(isHalal),
+                                                          isVegan:JSON.parse(isVegan)
                                                          })
 
             res.json(recipe)
@@ -44,7 +48,7 @@ class RecipeController {
         try{
 
             const {
-                productName,
+                recipeName,
                 typeId,
                 holidayId,
                 nationalCuisineId,
@@ -56,15 +60,17 @@ class RecipeController {
             if(page){
 
                     const recipes = await recipeService.getRecipes({
-                                                                      productName,
+                                                                      recipeName,
                                                                       typeId,
                                                                       holidayId,
                                                                       nationalCuisineId,
-                                                                      isVegan:isVegan,
-                                                                      isHalal:isHalal,
+                                                                      isVegan:JSON.parse(isVegan.toLowerCase()),
+                                                                      isHalal:JSON.parse(isHalal.toLowerCase()),
                                                                       page
                                                                    })
-                                                               
+                             
+                      
+
                     res.json(recipes)
 
             }else{
@@ -81,6 +87,29 @@ class RecipeController {
             next(e)
         }
     }
+    async getMineRecipes(req,res,next){
+        try{
+
+            const {page,isReady,recipeName} = req.query
+
+            const { refreshToken } = req.cookies
+
+            const { userId } = await userService.getUserIdByRefreshToken(refreshToken)
+
+            const recipes = await recipeService.getMineRecipes(userId,page,isReady,recipeName)
+
+            res.json({
+                count:Math.ceil(recipes.count / 5),
+                rows:recipes.rows
+            })
+            
+
+        }catch(e){
+            next(e)
+        }
+
+    }
+
     async editRecipe(req,res,next){
         try{
 

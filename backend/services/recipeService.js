@@ -9,6 +9,8 @@ const perPage = 5;
 class RecipeService {
     async postRecipe(recipe){
 
+        console.log(recipe.authorName + "USER NAME")
+
         const recipeData = await Recipe.create({
             title:recipe.title,
             authorId:recipe.authorId,
@@ -17,7 +19,8 @@ class RecipeService {
             holidayId:recipe.holidayId,
             nationalCuisineId:recipe.nationalCuisineId,
             isHalal:recipe.isHalal,
-            isVegan:recipe.isVegan
+            isVegan:recipe.isVegan,
+            authorName:recipe.authorName,
         })
 
         const recipeResult = await RecipeInfo.create({
@@ -101,15 +104,17 @@ class RecipeService {
         }
 
     }
-    async getRecipes({productName,typeId,holidayId,nationalCuisineId,isVegan,isHalal,page}){
+    async getRecipes({recipeName,typeId,holidayId,nationalCuisineId,isVegan,isHalal,page}){
+
+        console.log({isHalal,isVegan})
 
         const whereOptions = {};
 
         const offset =  (page - 1 ) * perPage 
 
-          if (productName) {
+          if (recipeName) {
             whereOptions.title = {
-                                  [Op.iLike]:`%${productName}%`
+                                  [Op.iLike]:`%${recipeName}%`
                                  }
           }
           
@@ -125,11 +130,11 @@ class RecipeService {
              whereOptions.nationalCuisineId = nationalCuisineId;
           }
      
-          if (isVegan || !(isVegan)) {
+          if (isVegan) {
             whereOptions.isVegan = isVegan;
           } 
           
-          if (isHalal || !(isHalal)) { 
+          if (isHalal) { 
             whereOptions.isHalal = isHalal;
           }
 
@@ -139,12 +144,75 @@ class RecipeService {
             where:whereOptions
         })
 
+        console.log(dataOfrecipes)
+
         return {
             count: Math.ceil(dataOfrecipes.count / 5),
             rows: dataOfrecipes.rows
         }
 
     }
+
+    async getMineRecipes(id,page,isReady,recipeName){
+
+        const offset =  (page - 1 ) * perPage 
+
+        
+
+        if(JSON.parse(isReady)){
+
+            const whereOptions = {
+                authorId:id,
+                isPending:false,
+                isRejected:false
+            }
+
+            if(recipeName){
+                whereOptions.title = {
+                    [Op.iLike]:`%${recipeName}%`   
+                }
+            }
+
+            const recipes = await Recipe.findAndCountAll({
+                where:whereOptions,
+                offset
+               })
+
+               return recipes       
+        }else{
+            
+            const whereOptions = {
+                authorId:id,              
+                        [Op.or]: [
+                            { isRejected:true },
+                            { isPending:true }
+                          ],
+            }
+
+
+            if(recipeName){
+                whereOptions.title = {
+                        [Op.iLike]:`%${recipeName}%`                
+                }
+            }
+
+            const recipes = await Recipe.findAndCountAll({
+                where:whereOptions,
+                offset
+               })
+
+               return recipes    
+
+        }
+
+      
+         
+       
+
+         
+
+    }
+
     async getCharacteristicks(page,characteristicName,typeOfcharacteristic){
 
             if(typeOfcharacteristic == 'type'){

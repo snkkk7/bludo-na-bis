@@ -10,7 +10,7 @@ import {characteristicsActions} from '@/store/characteristicsSlice'
 import ChoosedOCharacteristicsList from "../List/ChoosedCharacteristicsList";
 
 
-const ChoosedCharacteristicsTab = () => { 
+const ChoosedFilterCharacteristicsTab = () => { 
 
     const dispatch = useAppDispatch()
 
@@ -61,4 +61,4 @@ const ChoosedCharacteristicsTab = () => {
 }
 
 
-export default ChoosedCharacteristicsTab
+export default ChoosedFilterCharacteristicsTab

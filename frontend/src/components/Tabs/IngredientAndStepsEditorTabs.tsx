@@ -45,10 +45,10 @@ const IngredientAndStepsEditorTabs = () => {
                         </TabList>   
                      </Box>
                      <TabPanel value="1">
-                           <button type='button' className='block mx-auto border-2 rounded-lg p-2' onClick={handleAddIngredient}>Добавить Ингридиенты</button>
+                           <button type="button" className='block mx-auto border-2 rounded-lg p-2' onClick={handleAddIngredient}>Добавить Ингридиенты</button>
                      </TabPanel>
                      <TabPanel value="2">
-                           <button type='button' className='block mx-auto border-2 rounded-lg p-2' onClick={handleAddStep}>Добавить шаги</button>
+                           <button type="button" className='block mx-auto border-2 rounded-lg p-2' onClick={handleAddStep}>Добавить шаги</button>
                      </TabPanel>            
             </TabContext>
             <AddIngredientModal isOpen={isIngredientsModalVisible} onHandleCloseModal={handleCloseIngredientModal}/>

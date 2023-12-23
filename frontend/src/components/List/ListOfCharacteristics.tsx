@@ -3,6 +3,8 @@ import type {IListOfCharacteristics} from '@/interfaces'
 import Pagination from '@mui/material/Pagination';
 import { FC } from 'react'
 
+
+
 const ListOfCharacteristics:FC<IListOfCharacteristics> = ({onHandleChangePage,items,page,onAddCharacteristic,countPages}) => {
 
     return (
@@ -12,8 +14,8 @@ const ListOfCharacteristics:FC<IListOfCharacteristics> = ({onHandleChangePage,it
                 {
 
                     items.map((el : any ) => (
-                        <li className='text-center rounded-lg border-2 px-5 py- mb-2'>
-                            <button onClick={onAddCharacteristic} key={el.id} id={el.id}>{el.name}</button>
+                        <li key={el.id} className='text-center rounded-lg border-2 px-5 py- mb-2'>
+                            <button onClick={onAddCharacteristic}  id={el.id}>{el.name}</button>
                         </li>
                     ))
 

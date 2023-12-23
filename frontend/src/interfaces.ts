@@ -10,12 +10,20 @@ export type initialStateAuthorization = {
 export type IRecipeItemProps = {
     title:string,
     img:string,
+    authorId:number,
+    authorName:string,
     link:string
 }
 
-export type IFilterRecipeModal = {
-    handleCloseFilterModal: () => void,
+export type IRecipeModal = {
+    handleCloseModal: () => void,
     isOpen:boolean,
+    addType:(e:any) => void,
+    addHoliday:(e:any) => void,
+    addNationalCuisine:(e:any) => void,
+    typeModal:string,
+
+    
 }
 
 export type IListOfCharacteristics = {
@@ -74,8 +82,8 @@ export interface IinitialStateRecipe {
 }
 
 export type IRecipe = {
-   
         authorId:number,
+        authorName:string,
         title:string,
         description:string,
         holidayName:string,
@@ -88,7 +96,7 @@ export type IRecipe = {
         link:string,
         isHalal:boolean,
         isVegan:boolean,
-     
+  
 }
 
 
@@ -108,5 +116,52 @@ export interface IOptionsModal {
 
 export interface IErrorModal {
     isOpen:boolean,
-    errors:[boolean,boolean]
+    errors:{
+        isTypeErrorVisible:boolean,
+        isHolidayErrorVisible:boolean,
+        isNationalCuisineErrorVisible:boolean,
+        isIngredientErrorVisible:boolean,
+        isStepErrorVisible:boolean,
+    }
+}
+
+export interface IAddCharacteristicsModal {
+    isOpen:boolean,
+    onHandleCloseModal:() => void
+}
+
+export interface ICharacteristicTab {
+    addType:(e:any) => void,
+    addNationalCuisine:(e:any) => void,
+    addHoliday:(e:any) => void,
+    type:string
+}
+
+export interface ICharacteristcsList {
+    addCharacteristic:(e:any) => void
+}
+
+export interface IRecipeCharacteristicTab {
+    name:string,
+    id:string
+}
+
+export interface IRecipes {
+    isLoading:boolean,
+    isSuccess:boolean,
+    children:React.ReactNode,
+    handleChangePage:(_:any,page:number) => void,
+    handleChangeValue:(e:any) => void
+    countPages:number,
+    page:number
+}
+
+export interface IUserRecipeProps {
+    title:string,
+    img:string,
+    authorId:number,
+    authorName:string,
+    isRejected:boolean,
+    isPending:boolean,
+    id:string
 }

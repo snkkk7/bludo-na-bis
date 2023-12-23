@@ -1,8 +1,7 @@
 import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import type {IOptionsModal} from '@/interfaces'
+import type { IOptionsModal } from '@/interfaces'
 import { FC } from 'react';
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm, SubmitHandler,Controller } from "react-hook-form"
@@ -51,14 +50,14 @@ const AddIngredientModal:FC<IOptionsModal> = ({isOpen,onHandleCloseModal}) => {
             <Typography id="modal-modal-title" className='text-center mb-2' variant="h6" component="h2">
                Добавте ингредиент!
             </Typography>
-            <form id='add-ingredient' className='mb-5' onSubmit={handleSubmit(onSubmit)}>
+            <form id="ingredientform" className='mb-5' onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <input type="text" {...register("nameOfIngredient")} className='border-2 rounded-lg mb-2 p-2' placeholder='Добавте ингредиент!' />
                     {
                          <span className='block mb-2'>{errors.nameOfIngredient?.message}</span>
                     }
-                </div>
-                <button type='submit' className='border-2 rounded-xl text-sm p-2'>Добавить ингредиент!</button>
+                      <button type="submit" className='border-2 rounded-xl text-sm p-2'>Добавить ингредиент!</button>
+                </div>       
             </form>
             <h3 className='text-xl mb-2'>Ингридиенты</h3>
             <ul>

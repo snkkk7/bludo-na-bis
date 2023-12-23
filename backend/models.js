@@ -5,7 +5,7 @@ const {DataTypes, INTEGER} = require('sequelize')
 
 const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true,unique:true, autoIncrement: true},
-    name:{type:DataTypes.STRING, allowNull:false,primaryKey:true            },
+    name:{type:DataTypes.STRING, allowNull:false},
     email: {type: DataTypes.STRING,allowNull:false, unique: true,},
     password: {type: DataTypes.STRING,allowNull:false},
     likedPosts:{type:DataTypes.ARRAY(DataTypes.JSONB),defaultValue:[]},
@@ -45,6 +45,7 @@ const Recipe = sequelize.define('recipe',{
         model:'users',
         key:"id"
     }},
+    authorName:{type:DataTypes.STRING,allowNull:false},
     isPending:{type:DataTypes.BOOLEAN,defaultValue:true,},
     isRejected:{type:DataTypes.BOOLEAN,defaultValue:false,},
     isChecked:{type:DataTypes.BOOLEAN,defaultValue:false},

@@ -58,9 +58,16 @@ class UserService {
         return token;
     }
 
-    async getMe(refreshToken){
+    async getUserIdByRefreshToken(refreshToken){
 
         const userData = await tokenService.findToken(refreshToken)
+
+        return userData
+    }
+
+    async getUserInfo(id){
+
+        const userData = await User.findOne({where:{id}})
 
         return userData
     }

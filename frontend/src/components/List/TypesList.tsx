@@ -11,9 +11,13 @@ import { characteristicsActions } from "@/store/characteristicsSlice"
 
 import {useAppDispatch} from '../../store/hooks'
 
+import {FC} from 'react'
+
+import {ICharacteristcsList} from "@/interfaces"
+
+const TypesList:FC<ICharacteristcsList> = ({addCharacteristic}) => {
 
 
-const TypesList = () => {
 
     const [typeName,setTypeName] = useState<string>("") 
 
@@ -43,7 +47,7 @@ const TypesList = () => {
                                      page={page}
                                      countPages={data.pages}
                                      onHandleChangePage={(e:any,page:number) => setPage(page)}
-                                     onAddCharacteristic={(e) => dispatch(characteristicsActions.addType({name:e.target.innerHTML || null,id:e.target.id}))}
+                                     onAddCharacteristic={addCharacteristic}
                          />
                      )
             }

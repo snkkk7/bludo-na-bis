@@ -11,9 +11,11 @@ import { characteristicsActions } from "@/store/characteristicsSlice"
 
 import {useAppDispatch} from '../../store/hooks'
 
+import {FC} from 'react'
 
+import {ICharacteristcsList} from '@/interfaces'
 
-const HolidaysList = () => {
+const HolidaysList:FC<ICharacteristcsList> = ({addCharacteristic}) => {
 
     const [holidayName,setholidayName] = useState<string>("") 
 
@@ -41,7 +43,7 @@ const HolidaysList = () => {
                                      page={page}
                                      countPages={data.pages}
                                      onHandleChangePage={(e:any,page:number) => setPage(page)}
-                                     onAddCharacteristic={(e) => dispatch(characteristicsActions.addHoliday({name:e.target.innerHTML || null,id:e.target.id}))}
+                                     onAddCharacteristic={addCharacteristic}
                          />
                      )
             }

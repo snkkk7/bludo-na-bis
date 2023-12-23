@@ -14,6 +14,7 @@ const RecipesItem:React.FC<IRecipeItemProps> = (props) => {
             <div>
                 <p>{props.title}</p>
                 <Link href={`recipes/${props.link}`}>перейти на рецепт</Link>
+                <Link className='block' href={`profile/${props.authorId}`}>{props.authorName}</Link>
             </div>
         </li>
     )
