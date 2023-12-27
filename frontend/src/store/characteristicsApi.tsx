@@ -18,9 +18,10 @@ import type {
                 url:`?page=${body.page}${body.characteristicName && `&characteristicName=${body.characteristicName}`}${body.typeOfCharacteristic && `&typeOfCharacteristic=${body.typeOfCharacteristic}`}&${body.queryParams}`,                                              
                 
             })
-        })
+        }),
+     
     
     })
 })
 
-export const { useGetCharacteristicsQuery} = characteristcsApi
+export const { useGetCharacteristicsQuery } = characteristcsApi

@@ -58,8 +58,13 @@ export const authorizationApi = createApi({
           })
         }),
         getUserInfo:builder.query({
-          query:(builder) => ({
+          query:(body) => ({
             url:"/getMineInfo"
+          })
+        }),
+        isAdmin:builder.query({
+          query:(body) => ({
+              url:"isAdmin",
           })
         })
     })
@@ -67,4 +72,4 @@ export const authorizationApi = createApi({
 
   })
 
-  export const {useSingupMutation,useLoginMutation,useChechAuthQuery,useGetUserInfoQuery} = authorizationApi
+  export const {useSingupMutation,useLoginMutation,useChechAuthQuery,useGetUserInfoQuery,useIsAdminQuery} = authorizationApi

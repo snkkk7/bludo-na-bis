@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type {IinitialStateRecipe} from '@/interfaces'
+import { stat } from 'fs'
+
 
 const initialState:IinitialStateRecipe = {
     steps:[],
@@ -27,10 +29,11 @@ export const recipeSlice = createSlice({
 
             if(!state.steps.some(el => JSON.stringify({name:nameOfStep}) === JSON.stringify({name:el.name}))){
 
-                const id = String(state.ingredients.length)
+                const id = Math.random() * 100 + "." + state.steps.length + Math.random() * 100 + state.ingredients.length * Math.random() * 100 + 'ID'
 
-                state.steps = [...state.steps,{name:nameOfStep,id}]
+                state.steps = [...state.steps,{name:nameOfStep,id:id,isInputVisible:false}]
 
+                console.log(state.steps)
             }
 
         },  
@@ -38,7 +41,7 @@ export const recipeSlice = createSlice({
 
             if(!state.ingredients.some(el => JSON.stringify({name:nameOfIngredient}) === JSON.stringify({name:el.name}))){
 
-                    const id = String(state.ingredients.length)
+                    const id = Math.random() * 100 + "." + state.steps.length + Math.random() * 100 + state.ingredients.length * Math.random() * 100 + 'ID'
 
                     state.ingredients = [...state.ingredients,{name:nameOfIngredient,id}]
 
@@ -49,9 +52,21 @@ export const recipeSlice = createSlice({
         },
         removeIngredient(state,{payload:id}){
 
-            console.log(id)
-
             state.ingredients = state.ingredients.filter((el) => el.id !== id)
+        },
+        toggleStepInput(state,{payload:{value,id}}){
+
+                const index = state.steps.findIndex(el => el.id == id)
+
+                if(!(index === -1)){
+
+                    console.log(index)
+
+                state.steps[index].isInputVisible = !state.steps[index].isInputVisible
+
+                state.steps[index].name = value
+            }
+
         },
         addHoliday(state,{payload:{name,id}}){
             if(state.holiday.name !== name){
@@ -94,8 +109,56 @@ export const recipeSlice = createSlice({
                     id
                 }
             }
-        }
-    }
+        },
+        resetRecipe(state){
+                state.holiday = {
+                    name:"",
+                    id:''
+                }
+
+                state.type = {
+                    name: "",
+                    id:""
+                }
+
+                state.nationalCuisine = {
+                    name:"",
+                    id: "",
+                }
+
+                state.steps = []
+
+                state.ingredients = []
+
+        } ,
+        setRecipeCharacteristics(state,{payload:{type,ingredients,steps,holiday,nationalCuisine}}){
+
+            state.holiday = {
+                name:holiday.name,
+                id:holiday.id
+            }
+
+            state.nationalCuisine = {
+                name:nationalCuisine.name,
+                id:nationalCuisine.id
+            }
+            
+            state.type = {
+                name:type.name,
+                id:type.id
+            }
+
+            state.steps = steps.map((el:any) => ({
+                name:el.name,
+                id:el.id,
+                isInputVisible:false
+            }))
+
+            state.ingredients = ingredients
+            
+        },
+     
+    }   
 })
 
 export const recipeActions = recipeSlice.actions

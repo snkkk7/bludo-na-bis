@@ -3,17 +3,22 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import type {IOptionsModal} from '@/interfaces'
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm, SubmitHandler,Controller } from "react-hook-form"
 import * as yup from "yup"
 import { useAppDispatch,useAppSelector } from '@/store/hooks';
 import {recipeActions} from '@/store/recipeSlice'
-
+import editIcon from "../../../public/edit-icon.png"
+import Image from 'next/image';
 
 const AddStepModal:FC<IOptionsModal> = ({isOpen,onHandleCloseModal}) => {
 
     const dispatch = useAppDispatch()
+
+    const [value,setValue] = useState('')
+
+
 
     const schema = yup.object({
         nameOfStep:yup.string().required("Введите пожалуйста шаг")
@@ -41,6 +46,18 @@ const AddStepModal:FC<IOptionsModal> = ({isOpen,onHandleCloseModal}) => {
         dispatch(recipeActions.removeStep(e.currentTarget.id))
      
     }
+
+    const editStep = (e:any) => {
+        dispatch(recipeActions.toggleStepInput({id:e.target.id,value:value}))
+        const idx = steps.findIndex(el => el.id == e.target.id)
+        setValue(steps[idx].name)
+    }
+
+    const handleChangeStepName = (e:any) => {
+        setValue(e.target.value)
+    }
+
+
 
 
     return (
@@ -70,9 +87,17 @@ const AddStepModal:FC<IOptionsModal> = ({isOpen,onHandleCloseModal}) => {
                 }
                 {
                     steps.map(el => (
-                        <li className='flex items-center gap-2' key={el.id}>
-                            <p>{el.name}</p>
-                            <button onClick={handleRemoveStep} id={el.id} className='text-xl'>X</button>
+                        <li className='flex items-center gap-5' key={el.id}>
+                            {
+                                !el.isInputVisible &&  <p>{el.name}</p>
+                            }      
+                            {
+                                el.isInputVisible && <input type="text" onChange={handleChangeStepName} className='border-b-2 border-slate-700' defaultValue={value} />
+                            }
+                            <button onClick={handleRemoveStep} id={el.id} className='text-xl text-rose-600'>X</button>
+                            <button id={el.id} onClick={editStep}>
+                                <Image id={el.id} src={editIcon} alt='edit icon' height={25} width={25}/>
+                            </button>
                         </li>
                     ))
                 }

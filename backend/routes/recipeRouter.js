@@ -21,7 +21,8 @@ recipeRouter.get("/:id",recipeController.getRecipe)
 
 recipeRouter.put("/:id",recipeController.editRecipe)
 
-
 recipeRouter.delete("/:id",recipeController.deleteRecipe)
+
+recipeRouter.get("/editRecipe/:id",recipeController.getRecipeForEdit)
 
 module.exports = recipeRouter

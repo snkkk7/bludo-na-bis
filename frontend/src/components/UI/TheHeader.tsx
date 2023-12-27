@@ -6,7 +6,7 @@ import Link from "next/link"
 
 import {authorizationActions} from '@/store/authorizationSlice'
 
-import {useChechAuthQuery} from '@/store/authrizationApi'
+import {useChechAuthQuery,useIsAdminQuery} from '@/store/authrizationApi'
 
 import { useAppSelector,useAppDispatch } from "@/store/hooks"
 
@@ -16,13 +16,15 @@ import { useRouter } from "next/router"
 
 const TheHeader = () => {
 
-    const {isAuth} = useAppSelector(state => state.authorization)
+    const {isAuth,isAdmin} = useAppSelector(state => state.authorization)
 
     const dispatch = useAppDispatch()
 
     const {data,isLoading,isSuccess,isError} = useChechAuthQuery(null)
   
     const {pathname} = useRouter() 
+
+    const {data:dataIsAdmin,isLoading:isLoadingIsAdmin,isSuccess:isSuccessIsAdmin} = useIsAdminQuery("")
 
     useEffect(() => {
       if(isSuccess){
@@ -33,6 +35,14 @@ const TheHeader = () => {
         }
       }
     },[isLoading])
+
+    useEffect(() => {
+
+      if(isSuccessIsAdmin){
+        dispatch(authorizationActions.defineAdminStatus(dataIsAdmin.isAdmin))
+      }
+
+   },[isSuccessIsAdmin])
 
 
     return (
@@ -55,6 +65,13 @@ const TheHeader = () => {
                                         )
                           }
                           {
+                            isAuth && isAdmin && (
+                                                  <li className={`${pathname === '/admin' && 'border-b rounded-b-mg pb-1'}`}>
+                                                    <Link className="text-white" href={`/admin`}>Админ панель</Link>
+                                                  </li>
+                                                  )
+                          }
+                          {
                             isAuth && (
                                       <>
                                         <li className={`${pathname === '/' && 'border-b rounded-b-mg pb-1'}`}>
@@ -72,6 +89,7 @@ const TheHeader = () => {
                                       </>
                                       )
                           }
+                          
                         {
                             isLoading && <li className="text-white">Loading...</li>
                         }

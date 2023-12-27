@@ -13,7 +13,7 @@ import IngredientAndStepsEditorTabs from '@/components/Tabs/IngredientAndStepsEd
 
 import * as yup from "yup"
 
-import ErrorModal from '@/components/Modals/ErrorModal'
+import MessagesModal from '@/components/Modals/MessagesModal'
 
 import CharacteristicsRecipeModal from "@/components/Modals/CharacteristicsRecipeModal"
 
@@ -22,6 +22,8 @@ import { useAppSelector,useAppDispatch } from "@/store/hooks"
 import {recipeActions} from "@/store/recipeSlice"
 
 import {usePostRecipeMutation} from "@/store/recipesApi"
+
+
 
 const PostRecipe = () => {
 
@@ -62,6 +64,7 @@ const PostRecipe = () => {
                                 setValue,
                                 watch,
                                 control,
+                                reset,
                                 formState: { errors,touchedFields },
                               } = useForm({
                                 resolver: yupResolver(schema),
@@ -89,7 +92,7 @@ const PostRecipe = () => {
     
     const recipeStore = useAppSelector(state => state.recipe)
 
-    const [postRecipe,{isLoading,isSuccess}] = usePostRecipeMutation()
+    const [postRecipe,{isLoading,isSuccess,isError}] = usePostRecipeMutation()
 
     const onSubmit = (data:any,e:any) => {
       e.preventDefault()
@@ -136,6 +139,9 @@ const PostRecipe = () => {
           
             postRecipe(formData)
           
+            reset()
+
+            dispatch(recipeActions.resetRecipe())
 
           }
       }
@@ -232,14 +238,20 @@ const PostRecipe = () => {
                  <button id="post-recipe" type="submit" className="border-2 px-12 py-2 text-lg rounded-lg">submit</button>       
             </form>
         </div>
-      <ErrorModal isOpen={isErrorModalVisible} errors={{
+      <MessagesModal isOpen={isErrorModalVisible} reasons={{
                                                         isTypeErrorVisible:isTypeErrorVisible,
                                                         isStepErrorVisible:isStepErrorVisible,
                                                         isNationalCuisineErrorVisible:isNationalCuisineErrorVisible,
                                                         isHolidayErrorVisible:isHolidayErrorVisible,
-                                                        isIngredientErrorVisible:isIngredientErrorVisible
+                                                        isIngredientErrorVisible:isIngredientErrorVisible,
+                                                        isSuccess:isSuccess,
+                                                        isError:isError,
                                                       }
                                                       }
+                                                      messages={{
+                                                        errorMessage:"Не удалось отредактировать рецепт!",
+                                                        successMessage:"Вы успешно отправили рецепт!"
+                                                      }}
        />
 
       <CharacteristicsRecipeModal 

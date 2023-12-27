@@ -1,6 +1,9 @@
 
 
+
 const AdminService = require("../services/adminService")
+
+const {Type,NationalCuisine,Holiday} = require("../models")
 
 class AdminController {
     async addType(req,res,next){
@@ -57,6 +60,23 @@ class AdminController {
             next(e)
         }
     }
+
+    async deleteType(req,res,next){
+
+        try{
+
+            const {id} = req.params
+
+            const type = await AdminService.deleteType(id)
+
+            res.json(type)
+
+        }catch(e){
+            next(e)
+        }
+
+    }
+
     async editHoliday(req,res,next){
         try{
 
@@ -79,23 +99,11 @@ class AdminController {
 
             const {nationalCuisineName} = req.body
 
+
             const nationalCuisine = await AdminService.editNationalCuisine(nationalCuisineName,id)
 
             res.json(nationalCuisine)
 
-        }catch(e){
-            next(e)
-        }
-    }
-    async sendMessage(req,res,next){
-        try{     
-            const {message,userId,recipeId} = req.body
-            
-            console.log({message,userId,recipeId})
-
-            const result = await AdminService.sendMessage({message,userId,recipeId})
-            
-            res.json(result)
         }catch(e){
             next(e)
         }
@@ -115,19 +123,19 @@ class AdminController {
         }
     }
     
-    async getWasEditedRecipes(req,res,next){
-        try{
+    // async getWasEditedRecipes(req,res,next){
+    //     try{
 
-            const {page} = req.query
+    //         const {page} = req.query
 
-            const recipes = await AdminService.getWasEditedExpectedRecipes(page)
+    //         const recipes = await AdminService.getWasEditedExpectedRecipes(page)
 
-            res.json(recipes)
+    //         res.json(recipes)
 
-        }catch(e){
-            next(e)
-        }
-    }
+    //     }catch(e){
+    //         next(e)
+    //     }
+    // }
 
     async banUser(req,res,next){
         try{
@@ -149,15 +157,65 @@ class AdminController {
 
             const {id} = req.params
 
-            const res = await AdminService.approveTheRecipe(id)
+            const result = await AdminService.approveTheRecipe(id)
 
-            res.json(res)
+            res.json(result)
 
         }catch(e){
             next(e)
         }
 
     }
+
+    async rejectTheRecipe(req,res,next){
+        try{
+
+            const {id} = req.params
+
+            const result = await AdminService.rejectTheRecipe(id)
+
+            res.json(result)
+
+        }catch(e){
+            next(e)
+        }
+    }
+
+    async getAllTypes(req,res,next) {
+                try{
+                    
+                    const types = await Type.findAll()
+
+                    res.json(types)
+
+                }catch(e){
+                    next(e)
+                }
+    }
+
+    async getAllHolidays(req,res,next) {
+        try{
+            
+            const holidays = await Holiday.findAll()
+
+            res.json(holidays)
+
+        }catch(e){
+            next(e)
+        }
+    }   
+
+        async getAllNationalCuisines(req,res,next) {
+    try{
+        
+        const nationalCuisines = await NationalCuisine.findAll()
+
+        res.json(nationalCuisines)
+
+    }catch(e){
+        next(e)
+    }
+}
 
 }
 

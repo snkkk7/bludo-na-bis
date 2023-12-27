@@ -16,4 +16,6 @@ userRouter.get('/refresh', userController.refresh);
 
 userRouter.get('/getMineInfo',userController.getMineInfo);
 
+userRouter.get("/isAdmin",userController.isAdmin)
+
 module.exports = userRouter

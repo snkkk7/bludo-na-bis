@@ -1,6 +1,6 @@
 
 const { Op, where } = require('sequelize')
-const {Recipe, Type, Holiday, NationalCuisine, LikedRecipe,RecipeInfo} = require('../models')
+const {Recipe, Type, Holiday, NationalCuisine, LikedRecipe,RecipeInfo,User} = require('../models')
 const fs = require('fs')
 const path = require('path');
 
@@ -32,29 +32,50 @@ class RecipeService {
 
         return recipeData
     }
-    async editRecipe(recipe,id){
-
-        const options = {
+    async editRecipe(recipe,id,mustEdit){
+        const optionsOfRecipe = {
                           title:recipe.title,
-                          description:recipe.description,
-                          ingredients:recipe.ingredients,
-                          steps:recipe.steps,
                           typeId:recipe.typeId,
                           holidayId:recipe.holidayId,
                           nationalCuisineId:recipe.nationalCuisineId,
-                          isHalal:recipe.isHalal,
-                          isVegan:recipe.isVegan
+                          isHalal:JSON.parse(recipe.isHalal),
+                          isVegan:JSON.parse(recipe.isVegan)
                         }
 
+        const optionsOfRecipeInfo = {
+            description:recipe.description,
+            steps:JSON.parse(recipe.steps),
+            ingredients:JSON.parse(recipe.ingredients)
+        }
+
         if(!(recipe.isRejected) && !(recipe.wasEdited)){
-            options.wasEdited = true
+            optionsOfRecipe.wasEdited = true
         }
 
         if(recipe.img){
-            options.img
+           
+            optionsOfRecipe.img = recipe.img
         }
         
-        const recipeRes = await Recipe.update(options,{where:{id}})
+
+        if(mustEdit){
+
+            console.log(mustEdit)
+
+            const recipe = await Recipe.findOne({where:{id}})
+
+            recipe.isPending = true
+
+            recipe.isRejected = false
+
+            recipe.save()
+
+        }
+
+    
+        const recipeRes = await Recipe.update(optionsOfRecipe,{where:{id}})
+
+        const recipeInfo = await RecipeInfo.update(optionsOfRecipeInfo,{where:{recipeId:id}})
 
         return recipeRes
 
@@ -63,36 +84,79 @@ class RecipeService {
 
         const { img : fileName } = await Recipe.findOne({where:{id}})
 
+        const LikedReipes = await LikedRecipe.destroy({where:{recipeId:id}})
+
         const filePath = path.join(__dirname,'..', 'static', fileName);
 
         const res = await Recipe.destroy({where:{id}})
+
+        const resRecipeInfo = await RecipeInfo.destroy({where:{recipeId:id}})
 
         fs.unlinkSync(filePath)
 
         return res
 
     }
-    async getRecipe(id){
+
+    async getRecipeForEdit(id){
 
         const recipe = await Recipe.findOne({where:{id}})
-
 
         const recipeInfo = await RecipeInfo.findOne({where:{recipeId:recipe.id}})
 
         const typeInfo = await Type.findOne({where:{id:recipe.typeId}})
 
         const nationalCuisineInfo = await NationalCuisine.findOne({where:{id:recipe.nationalCuisineId}})
-        
+
         const holidayInfo = await Holiday.findOne({where:{id:recipe.holidayId}})
-        
+   
+        return {
+            title:recipe.title,
+            isVegan:recipe.isVegan,
+            isHalal:recipe.isHalal,
+            authorId:recipe.authorId,
+            img:recipe.img,
+            id:recipe.id,   
+            type:{
+                name:typeInfo.name,
+                id:typeInfo.id,
+            },
+            nationalCuisine:{
+                name:nationalCuisineInfo.name,
+                id:nationalCuisineInfo.id
+            },
+            holiday:{
+                name:holidayInfo.name,
+                id:holidayInfo.id
+            },
+            steps:recipeInfo.steps,
+            ingredients:recipeInfo.ingredients,
+            description:recipeInfo.description,
+        }
 
 
+    }
+
+    async getRecipe(id){
+
+        const recipe = await Recipe.findOne({where:{id}})
+
+        const recipeInfo = await RecipeInfo.findOne({where:{recipeId:recipe.id}})
+
+        const typeInfo = await Type.findOne({where:{id:recipe.typeId}})
+
+        const nationalCuisineInfo = await NationalCuisine.findOne({where:{id:recipe.nationalCuisineId}})
+
+        const holidayInfo = await Holiday.findOne({where:{id:recipe.holidayId}})
+   
+        const {name} = await User.findOne({where:{id:recipe.authorId}})
 
         return {
             title:recipe.title,
             isVegan:recipe.isVegan,
             isHalal:recipe.isHalal,
             authorId:recipe.authorId,
+            authorName:name,
             img:recipe.img,
             id:recipe.id,
             typeName:typeInfo.name,
@@ -103,10 +167,9 @@ class RecipeService {
             description:recipeInfo.description,
         }
 
+                  
     }
-    async getRecipes({recipeName,typeId,holidayId,nationalCuisineId,isVegan,isHalal,page}){
-
-        console.log({isHalal,isVegan})
+    async getRecipes({recipeName,typeId,holidayId,nationalCuisineId,isVegan,isHalal,page,isPending,isRejected,isChecked}){
 
         const whereOptions = {};
 
@@ -118,6 +181,18 @@ class RecipeService {
                                  }
           }
           
+          if(!(isChecked == undefined)){
+              whereOptions.isChecked = isChecked
+          }
+
+          if(!(isPending == undefined)){
+            whereOptions.isPending = isPending
+          }
+
+          if(!(isRejected == undefined)){
+              whereOptions.isRejected = isRejected
+          }
+
           if (typeId) {
              whereOptions.typeId = typeId
           }
@@ -143,8 +218,6 @@ class RecipeService {
             offset,
             where:whereOptions
         })
-
-        console.log(dataOfrecipes)
 
         return {
             count: Math.ceil(dataOfrecipes.count / 5),
@@ -204,12 +277,6 @@ class RecipeService {
                return recipes    
 
         }
-
-      
-         
-       
-
-         
 
     }
 

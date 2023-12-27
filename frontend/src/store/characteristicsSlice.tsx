@@ -6,6 +6,7 @@ const initialState:IinitialStateCharacteristics = {
     nationalCuisines:[],
     holidays:[],
     types:[],
+    characteristics:[],
     isHalal:false,
     isVegan:false,
 }
@@ -44,7 +45,27 @@ export const characteristicsSlice = createSlice({
         toggleVeganStatus(state){
             state.isVegan = !(state.isVegan)
         },
- 
+        setCharacteristicsAdmin(state,{payload:characteristics}){
+            state.characteristics = characteristics.map((el:any) => ({
+                name:el.name,
+                id:el.id,
+                isInputVisible:false
+            }))             
+        },
+        toggleCharacteristicInput(state,{payload:{value,id}}){
+
+            const index = state.characteristics.findIndex(el => el.id == id)
+
+            if(!(index === -1)){
+
+                console.log(index)
+
+            state.characteristics[index].isInputVisible = !state.characteristics[index].isInputVisible
+
+            state.characteristics[index].name = value
+        }
+
+    },
     }
 })
 

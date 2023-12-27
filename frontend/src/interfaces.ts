@@ -4,6 +4,7 @@ import { ChangeEvent,MouseEventHandler } from "react"
 export type initialStateAuthorization = {
     isAuth:boolean,
     isBanned:boolean,
+    isAdmin:boolean
 }
 
 
@@ -49,7 +50,7 @@ export interface IinitialStateCharacteristics  {
     types:ICharacteristic[],
     holidays:ICharacteristic[],
     nationalCuisines:ICharacteristic[],
- 
+    characteristics:any[],
     isHalal:boolean,
     isVegan:boolean,
 }
@@ -61,7 +62,8 @@ export interface IIngredient {
 
 export interface IStep {
     name:string,
-    id?:string
+    id:string,
+    isInputVisible:boolean
 }
 
 export interface IinitialStateRecipe {
@@ -114,14 +116,20 @@ export interface IOptionsModal {
     onHandleCloseModal: () => void
 }
 
-export interface IErrorModal {
+export interface IMessagesModal {
     isOpen:boolean,
-    errors:{
-        isTypeErrorVisible:boolean,
-        isHolidayErrorVisible:boolean,
-        isNationalCuisineErrorVisible:boolean,
-        isIngredientErrorVisible:boolean,
-        isStepErrorVisible:boolean,
+    reasons:{
+        isTypeErrorVisible?:boolean,
+        isHolidayErrorVisible?:boolean,
+        isNationalCuisineErrorVisible?:boolean,
+        isIngredientErrorVisible?:boolean,
+        isStepErrorVisible?:boolean,
+        isSuccess?:boolean,
+        isError?:boolean
+    },
+    messages:{
+        errorMessage:string,
+        successMessage:string
     }
 }
 
@@ -164,4 +172,12 @@ export interface IUserRecipeProps {
     isRejected:boolean,
     isPending:boolean,
     id:string
+}
+
+export interface ICharacteristics {
+    editCharacteristic:(e:any) => void,
+    handleChangeCharacteristicValue:(e:any) => void,
+    characteristics:any[],
+    isSuccess:boolean,
+    
 }

@@ -55,7 +55,8 @@ const Signup = () => {
 
         if(isSuccess){
             dispatch(authorizationActions.defineAuthStatus(true))
-            // router.push("/")
+            
+            router.push("/")
 
         }else{
             dispatch(authorizationActions.defineAuthStatus(false))

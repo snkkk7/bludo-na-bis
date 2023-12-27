@@ -107,6 +107,21 @@ class UserService {
 
         return {...tokens, user: userDto}
     }
+
+   async isAdmin(userId){
+      
+        const user = await User.findOne({id:userId})
+        
+        if(user){
+  
+            const isAdmin = user.role == 'ADMIN'
+
+            return isAdmin
+        }else{
+            return false
+        }
+    }
+
 }
 
 module.exports = new UserService()

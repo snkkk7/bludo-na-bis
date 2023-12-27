@@ -16,6 +16,16 @@ adminRouter.put("/holiday/:id",adminController.editHoliday)
 
 adminRouter.put("/nationalCuisine/:id",adminController.editNationalCuisine)
 
-adminRouter.post("/sendMessage",adminController.sendMessage)
+adminRouter.delete("/:id",adminController.deleteType)
+
+adminRouter.get('/allHolidays',adminController.getAllHolidays)
+
+adminRouter.get('/allNationalCuisines',adminController.getAllNationalCuisines)
+
+adminRouter.get('/allTypes',adminController.getAllTypes)
+
+adminRouter.put('/approveRecipe/:id',adminController.approveTheRecipe)
+
+adminRouter.put('/rejectRecipe/:id',adminController.rejectTheRecipe)
 
 module.exports = adminRouter

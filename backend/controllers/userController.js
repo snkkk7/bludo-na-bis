@@ -92,6 +92,32 @@ class UserController {
         }
     }
 
+    async isAdmin(req,res,next){
+        try{
+
+            const {refreshToken} = req.cookies
+
+            if(refreshToken){
+
+                const {userId} = await userService.getUserIdByRefreshToken(refreshToken)
+              
+                const isAdmin = await userService.isAdmin(userId)
+
+                return res.json({
+                    isAdmin
+                })
+        }else{
+            return res.json({
+                isAdmin:false
+            })
+        }
+
+
+        }catch(e){
+            next(e)
+        }
+    }
+
     async getMineInfo(req,res,next){
             try{
 

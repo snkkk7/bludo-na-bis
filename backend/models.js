@@ -49,7 +49,6 @@ const Recipe = sequelize.define('recipe',{
     isPending:{type:DataTypes.BOOLEAN,defaultValue:true,},
     isRejected:{type:DataTypes.BOOLEAN,defaultValue:false,},
     isChecked:{type:DataTypes.BOOLEAN,defaultValue:false},
-    wasEdited:{type:DataTypes.BOOLEAN,defaultValue:false,},
     img:{type:DataTypes.STRING,allowNull:false,unique:true}
 })
 
@@ -57,7 +56,7 @@ const RecipeInfo = sequelize.define("recipeInfo",{
     id:{type: DataTypes.INTEGER,allowNull:false, primaryKey: true, autoIncrement: true},
     steps:{type:DataTypes.ARRAY(DataTypes.JSON),defaultValue:[]},
     ingredients:{type:DataTypes.ARRAY(DataTypes.JSON),defaultValue:[]},
-    description:{type:DataTypes.STRING,allowNull:false},
+    description:{type:DataTypes.STRING(500),allowNull:false,},
 })
 
 const MessageOfRecipe = sequelize.define("messageOfRecipe",{
