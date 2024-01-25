@@ -4,6 +4,10 @@ import Link from "next/link";
 
 import type { Metadata,ResolvingMetadata } from 'next'
  
+import { useRouter } from "next/router";
+
+import { useWasRecipeLikedQuery } from "@/store/recipesApi";
+
 import Head from "next/head";
 
 export async function getStaticPaths(){
@@ -40,7 +44,7 @@ export async function getStaticProps({ params } : any) {
 
 export default function Recipe({recipe} : any){
 
-
+    const {query} = useRouter()
 
     return (
         <>

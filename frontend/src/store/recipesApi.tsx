@@ -60,10 +60,24 @@ export const recipesApi = createApi({
                         url:`/editRecipe/${body}`,
                         method:"GET"
                     })
+                }),
+                wasRecipeLiked: builder.query({
+                    query:(body) => ({
+                        url:`wasRecipeLiked/${body}`
+                    })
                 })
                 
             
             })
 })
 
-export const { useGetRecipesQuery,useGetRecipeQuery,usePostRecipeMutation,useGetMineRecipesQuery,useEditRecipeMutation,useDeleteRecipeMutation,useGetRecipeForEditQuery } = recipesApi
+export const { 
+               useGetRecipesQuery,
+               useGetRecipeQuery,
+               usePostRecipeMutation,
+               useGetMineRecipesQuery,
+               useEditRecipeMutation,
+               useDeleteRecipeMutation,
+               useGetRecipeForEditQuery,
+               useWasRecipeLikedQuery
+            } = recipesApi

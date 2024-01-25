@@ -68,6 +68,8 @@ class RecipeService {
 
             recipe.isRejected = false
 
+            recipe.isChecked = false
+
             recipe.save()
 
         }

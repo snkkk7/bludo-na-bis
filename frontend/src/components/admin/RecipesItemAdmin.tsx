@@ -50,7 +50,9 @@ const RecipesItemAdmin:FC<IRecipesItemAdmin> = ({title,authorName,authorId,link,
     const handleDeleteRecipe = (e:any) => {
 
         deleteRecipe(e.target.id)
-        console.log(e.target)
+        
+        location.reload()
+
     }
 
 
